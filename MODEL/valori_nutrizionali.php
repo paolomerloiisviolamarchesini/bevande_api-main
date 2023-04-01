@@ -8,7 +8,7 @@ class Valori_Nutrizionali
         $this->conn = $db;
     }
 
-    public function getArchiveNutritionalValues()
+    public function getArchiveNutritionalValue()
     {
         $sql=sprintf("SELECT * FROM valori_nutrizionali WHERE 1=1");
         $stmt=$this->conn->prepare($sql);
@@ -27,9 +27,17 @@ class Valori_Nutrizionali
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function setNutritionalValue($id)
+    public function setNutritionalValue($nome)
     {
+        $sql = "INSERT INTO valore_nutrizionale (nome)
+        VALUES (?)";
 
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $nome);
+
+    if ($stmt->execute())
+    return $stmt;
+    else return "";
     }
 }
 ?>

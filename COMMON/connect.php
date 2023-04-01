@@ -10,10 +10,11 @@ class Database
         $port = "3306";
         $db   = "bevande";
         $user = "root";
-        $pass = "luca";
+        $pass = "";
+
         try {
             $this->dbConnection = new PDO(
-                "mysql:host=".$host.";port=".$port.";charset=utf8mb4;dbname=".$db,
+                "mysql:host=$host;port=$port;charset=utf8mb4;dbname=$db",
                 $user,
                 $pass
             );

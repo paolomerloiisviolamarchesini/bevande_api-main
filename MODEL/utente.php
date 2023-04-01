@@ -65,6 +65,14 @@ class Utente
 
         return $stmt->rowCount();
     }
+
+    public function getArchiveUsers(){
+        $sql=sprintf("SELECT * FROM utente WHERE 1=1");
+        $stmt=$this->conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
 
