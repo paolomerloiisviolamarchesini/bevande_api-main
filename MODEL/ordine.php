@@ -6,10 +6,16 @@ class Ordine
     public function __construct($db)
     {
         $this->conn = $db;
+
     }
 
     public function getOrder($id){
-        
+        $sql=sprintf("SELECT * FROM ordine o where o.id=:id");
+        $stmt=$this->conn->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getArchiveOrders(){
@@ -20,17 +26,18 @@ class Ordine
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /*public function getOrderProduct($id){
-        $sql=sprintf("SELECT * 
-        FROM ordine
-        INNER JOIN product on product.id=order.id
-        WHERE 1=1");
+    public function getOrderProducts($id){
+        $sql=sprintf("SELECT p.id, p.nome
+        FROM prodotto p
+        INNER JOIN prodotti_ordine po on po.id_prodotto = p.id
+        INNER JOIN ordine o on o.id=po.id_ordine
+        WHERE o.id=:id");
+
         $stmt=$this->conn->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }*/ 
-
-    //NON SO SE E' GIUSTA
+    }
 }
 ?>
