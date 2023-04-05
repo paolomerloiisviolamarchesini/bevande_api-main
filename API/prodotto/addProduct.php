@@ -14,18 +14,14 @@ empty($data->quantita) || empty($data->active)) {
 $db = new Database();
 $conn = $db->connect();
 $prodotto= new Prodotto($conn);
-$result=$prodotto->addProduct($data->nome ,$data->descrizione,$data->prezzo,$data->id_categoria,$data->quantita,$data->active);
-echo var_dump($result);
- $result = (json_decode(json_encode($result)));
-
-if ((int)$result->id != 0)
+if ($prodotto->addProduct($data->nome ,$data->descrizione,$data->prezzo,$data->id_categoria,$data->quantita,$data->active)==1) 
 {
     http_response_code(201);
-    echo json_encode(["message" => "Registration completed", "productID" => $productID->fetch_assoc()['id'], "response" => true]);
+    echo json_encode(["message" => "Registration completed"]);
     die();
 } else {
     http_response_code(400);
-    echo json_encode(["message" => "Registration failed", "response" => false]);
+    echo json_encode(["message" => "Registration failed"]);
     die();
 }
 ?>

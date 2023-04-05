@@ -29,15 +29,15 @@ class Valori_Nutrizionali
 
     public function setNutritionalValue($nome)
     {
-        $sql = "INSERT INTO valore_nutrizionale (nome)
-        VALUES (?)";
-
+        $sql = sprintf("INSERT INTO valore_nutrizionale (nome)
+        VALUES (:nome)");
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('s', $nome);
-
-    if ($stmt->execute())
-    return $stmt;
-    else return "";
+        $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
+        if ($stmt->execute())
+        {
+         return $stmt->rowCount();
+        }
+     else return "problemi";
     }
 }
 ?>

@@ -7,24 +7,41 @@ class Utente
     {
         $this->conn = $db;
     }
-    public function createUser($nome,$cognome,$email,$password,$telefono,$data_nascita){
-        $sql = "INSERT INTO utente (nome, cognome, email, password, telefono, data_nascita, active);
-        SELECT ?, ?, ?, ?, ?, ?, 1 WHERE NOT EXISTS (SELECT * FROM user WHERE email='" . $this->conn->real_escape_string($email) . "');";
+    public function createUser($nome,$cognome,$email,$password,$telefono,$data_nascita,$active)
+    {
+        $sql = sprintf("INSERT INTO utente (nome, cognome, email, `password`, telefono, data_nascita, active)
+       VALUES (:nome,:cognome,:email,:password,:telefono,:data_nascita,:active)");
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('ssssss', $nome, $cognome, $email, hash("sha256", $password),$telefono, $data_nascita);
-        if ($stmt->execute() && $stmt->affected_rows > 0)
-            return $stmt;
-        else
-            return "";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
+    $stmt->bindValue(':cognome', $cognome, PDO::PARAM_STR);
+    $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+    $stmt->bindValue(':password', $password, PDO::PARAM_STR);
+    $stmt->bindValue(':telefono', $telefono, PDO::PARAM_STR);
+    $stmt->bindValue(':data_nascita', $data_nascita, PDO::PARAM_STR);
+    $stmt->bindValue(':active', $active, PDO::PARAM_BOOL);
+
+if ($stmt->execute())
+{
+return $stmt->rowCount();
+}
+else return "problemi";
     }
+
     public function login($email, $password)
     {
-        $sql = sprintf("SELECT u.id
+     $sql = sprintf("SELECT u.id
                         FROM utente u
-                        WHERE (u.email = '%s') AND u.password = '%s'", $this->conn->real_escape_string($email), $this->conn->real_escape_string(hash("sha256", $password)));
+                        WHERE u.email=:email AND u.password=:password");
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+    $stmt->bindValue(':password', $password, PDO::PARAM_STR);
 
-        return $this->conn->query($sql);
+if ($stmt->execute())
+{
+return $stmt->rowCount();
+}
+else return "login failed";
     }
     public function getUser($id){
         $sql=sprintf("SELECT *
@@ -47,7 +64,11 @@ class Utente
         $sql=sprintf("UPDATE utente SET active=0 WHERE id=:id");
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+        if ($stmt->execute())
+    {
+    return 1;
+    }
+    else return "problemi";
     }
 
     public function modifyPassword($email, $oldPassword ,$newPassword)

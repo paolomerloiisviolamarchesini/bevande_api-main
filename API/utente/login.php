@@ -12,13 +12,11 @@ if (empty($data->email) || empty($data->password))
     echo json_encode(["Message" => "All fields required"]);
     die();
 }
-
 $db = new Database();
 $conn = $db->connect();
 $utente = new Utente($conn);
 
-$result = $utente->login($data->email, $data->password);
-if ($result->num_rows > 0)
+if ($utente->login($data->email, $data->password)==1)
 {
     http_response_code(200);
     echo json_encode(["response" => true, "userID" => $result->fetch_assoc()['id']]);

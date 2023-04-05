@@ -9,15 +9,16 @@ if (empty($data->nome)) {
     echo json_encode(["message" => "Fill every field"]);
     die();
 }
-
 $db = new Database();
 $conn = $db->connect();
 $val= new Valori_Nutrizionali($conn);
 
-if ($val->setNutritionalValue($data->$nome == true))
+if ($val->setNutritionalValue($data->nome)==1)
 {
-    echo json_encode(["message" => "Registration completed", "valID" => $valID->fetch_assoc()['id'], "response" => true]);
+    http_response_code(201);
+    echo json_encode(["message" => "Registration completed"]);
 } else {
-    echo json_encode(["message" => "Registration failed", "response" => false]);
+    http_response_code(400);
+    echo json_encode(["message" => "Registration failed"]);
 }
 ?>

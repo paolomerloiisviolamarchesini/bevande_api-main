@@ -6,18 +6,20 @@ header("Content-type: application/json; charset=UTF-8");
 $data = json_decode(file_get_contents("php://input"));
 
 if (empty($data->id)) {
-    http_response_code(404);
-    echo json_encode(["message" => "Insert a valid ID"]);
-    exit();
+    http_response_code(400);
+    echo json_encode(["message" => "Fill every field"]);
+    die();
 }
 $db = new Database();
 $conn = $db->connect();
 $utente = new Utente($conn);
-
-if ($result = $utente->deleteUser($data->$id)) {
-    echo json_encode($result);
+if ($utente->deleteUser($data->id)== 1) {
+    http_response_code(201);
+    echo json_encode(["message" => "Elimination completed"]);
+    die();
 } else {
     http_response_code(400);
-    echo json_encode(["message" => "User not found"]);
+    echo json_encode(["message" => "Elimination failed successfully "]);
+    die();
 }
 ?>

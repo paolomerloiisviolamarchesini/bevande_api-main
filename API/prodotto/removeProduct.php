@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/../../COMMON/connect.php';
 require __DIR__ . '/../../MODEL/prodotto.php';
-header("Content-type: application/json; charset=UTF-8");
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -10,15 +9,17 @@ if (empty($data->id)) {
     echo json_encode(["message" => "Insert a valid ID"]);
     die();
 }
-
 $db = new Database();
 $conn = $db->connect();
 $prodotto= new Prodotto($conn);
-
-if ($prodotto->removeProduct($data->id) == true) 
+if ($prodotto->removeProduct($data->id)==1) 
 {
-    echo json_encode(["message" => "Operation completed", "response" => true]);
+    http_response_code(201);
+    echo json_encode(["message" => "Delete completed"]);
+    die();
 } else {
-    echo json_encode(["message" => "Operation failed", "response" => false]);
+    http_response_code(400);
+    echo json_encode(["message" => "Delete failed"]);
+    die();
 }
 ?>
