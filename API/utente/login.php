@@ -15,11 +15,11 @@ if (empty($data->email) || empty($data->password))
 $db = new Database();
 $conn = $db->connect();
 $utente = new Utente($conn);
-
-if ($utente->login($data->email, $data->password)==1)
+$id=$utente->login($data->email, $data->password);
+if ($id>0)
 {
     http_response_code(200);
-    echo json_encode(["response" => true, "userID" => $result->fetch_assoc()['id']]);
+    echo json_encode(["response" => true, "userID" =>$id]);
 }
 else
 {

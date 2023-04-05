@@ -32,14 +32,14 @@ else return "problemi";
     {
      $sql = sprintf("SELECT u.id
                         FROM utente u
-                        WHERE u.email=:email AND u.password=:password");
+                        WHERE u.email=:email AND u.password=:password AND u.active=1");
     $stmt = $this->conn->prepare($sql);
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
     $stmt->bindValue(':password', $password, PDO::PARAM_STR);
 
 if ($stmt->execute())
 {
-return $stmt->rowCount();
+ return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 else return "login failed";
     }
@@ -81,11 +81,14 @@ else return "login failed";
         $stmt->bindValue(':newPassword', $newPassword, PDO::PARAM_STR);
         $stmt->bindValue(':oldPassword', $oldPassword, PDO::PARAM_STR);
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-
-        $stmt->execute();
-
+        
+        if ($stmt->execute())
+        {
         return $stmt->rowCount();
-    }
+        }
+        else return "problemi";
+        }
+    
 
     public function getArchiveUsers(){
         $sql=sprintf("SELECT * FROM utente WHERE 1=1");
