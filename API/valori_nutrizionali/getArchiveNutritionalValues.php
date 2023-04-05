@@ -10,15 +10,14 @@ $conn = $db->connect();
 $valori_nutrizionali = new Valori_Nutrizionali($conn);
 $result = $valori_nutrizionali->getArchiveNutritionalValue();
 
-if ($result != false) {
-    $valori_nutrizionali = array();
-    while ($row = $result->fetch_assoc())
-    {
-        $valori_nutrizionali[] = $row;
-    }
-    echo json_encode($valori_nutrizionali, JSON_PRETTY_PRINT);
-} else {
-    http_response_code(400);
-    echo json_encode(["message" => "Valori nutrizionali not found"]);
+$nvs = array();
+for ($i = 0; $i < (count($result)); $i++) {
+    $nv = array(
+        "id" =>  $result[$i]['id'],
+        "nome" => $result[$i]["nome"]
+    );
+    array_push($nvs, $nv);
 }
+
+echo json_encode($nvs);
 ?>

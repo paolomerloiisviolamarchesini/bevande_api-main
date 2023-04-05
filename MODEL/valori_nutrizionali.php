@@ -10,16 +10,16 @@ class Valori_Nutrizionali
 
     public function getArchiveNutritionalValue()
     {
-        $sql=sprintf("SELECT * FROM valori_nutrizionali WHERE 1=1");
+        $sql=sprintf("SELECT * FROM valore_nutrizionale WHERE 1=1");
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getNutritionalValue($id)
     {
-        $sql=sprintf("SELECT * FROM valori_nutrizionali WHERE id=:id");
+        $sql=sprintf("SELECT * FROM valore_nutrizionale WHERE id=:id");
         $stmt=$this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

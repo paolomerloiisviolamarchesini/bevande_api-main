@@ -8,15 +8,21 @@ $conn = $db->connect();
 $ordine = new Ordine($conn);
 $result = $ordine->getArchiveOrders();
 
-if ($result != false) {
-    $ordini = array();
-    while ($row = $result->fetch_assoc())
-    {
-        $ordini[] = $row;
-    }
-    echo json_encode($ordini, JSON_PRETTY_PRINT);
-} else {
-    http_response_code(400);
-    echo json_encode(["message" => "Order not found"]);
+$orders = array();
+for ($i = 0; $i < (count($result)); $i++) {
+    $order = array(
+        "id" =>  $result[$i]["id"],
+        "data_ora" => $result[$i]["data_ora"],
+        "nome_cliente" => $result[$i]["nome_cliente"],
+        "cognome_cliente" => $result[$i]["cognome_cliente"],
+        "totale" => $result[$i]["nome_cliente"],
+        "email_cliente" => $result[$i]["email_cliente"],
+        "telefono_cliente" => $result[$i]["telefono_cliente"],
+        "indirizzo_cliente" => $result[$i]["indirizzo_cliente"],
+        "ritiro" => $result[$i] ["ritiro"]
+    );
+    array_push($orders, $order);
 }
+
+echo json_encode($orders);
 ?>

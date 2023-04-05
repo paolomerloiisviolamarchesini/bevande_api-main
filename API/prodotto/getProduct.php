@@ -22,13 +22,11 @@ if ((int)$result->id >0)
 {
 
     echo json_encode($result, JSON_PRETTY_PRINT);
-    
     die();
 }
 else
 {
     echo json_encode(array("Message" => "No record"));
-    echo var_dump($result);
     die();
 }
 ?>

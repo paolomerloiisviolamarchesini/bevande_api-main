@@ -10,7 +10,7 @@ class Database
         $port = "3306";
         $db   = "bevande";
         $user = "root";
-        $pass = "";
+        $pass = "luca";
 
         try {
             $this->dbConnection = new PDO(

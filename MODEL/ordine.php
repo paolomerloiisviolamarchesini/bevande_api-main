@@ -23,7 +23,7 @@ class Ordine
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getOrderProducts($id){
@@ -32,12 +32,11 @@ class Ordine
         INNER JOIN prodotti_ordine po on po.id_prodotto = p.id
         INNER JOIN ordine o on o.id=po.id_ordine
         WHERE o.id=:id");
-
         $stmt=$this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

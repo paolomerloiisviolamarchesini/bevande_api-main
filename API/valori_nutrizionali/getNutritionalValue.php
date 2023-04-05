@@ -1,24 +1,26 @@
 <?php
 require __DIR__ . '/../../COMMON/connect.php';
-require __DIR__ . '/../../MODEL/prodotto.php';
+require __DIR__ . '/../../MODEL/valori_nutrizionali.php';
 header("Content-type: application/json; charset=UTF-8");
 
-$parts = explode("/", $_SERVER["REQUEST_URI"]);
 
-if (empty($parts[5])) {
-    http_response_code(400);
-    echo json_encode(["message" => "Insert a valid ID"]);
+if (!isset($_GET['id']) || empty($id = $_GET['id']))
+{
+    echo json_encode(array("Message" => "No id passed"));
     die();
 }
 
 $db = new Database();
 $conn = $db->connect();
-$valore_nutrizionale = new Valori_Nutrizionali($conn);
-$result = $valore_nutrizionale->getNutritionalValue($id);
+$valori_nutrizionali = new Valori_Nutrizionali($conn);
+//qui result è un array
+$result = $valori_nutrizionali->getNutritionalValue($id);
+//adesso result è un oggetto
+$result = (json_decode(json_encode($result)));
 
-if ($result->num_rows > 0)
+if ((int)$result->id >0)
 {
-    echo json_encode(array($result->fetch_assoc()), JSON_PRETTY_PRINT);
+    echo json_encode($result, JSON_PRETTY_PRINT);
     die();
 }
 else

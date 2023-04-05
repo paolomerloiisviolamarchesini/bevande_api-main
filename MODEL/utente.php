@@ -27,7 +27,7 @@ class Utente
         return $this->conn->query($sql);
     }
     public function getUser($id){
-        $sql=sprintf("SELECT u.nome, u.cognome, u.email, u.telefono, u.data_nascita
+        $sql=sprintf("SELECT *
         FROM utente u
         WHERE u.id=:id");
         $stmt=$this->conn->prepare($sql);
@@ -71,7 +71,7 @@ class Utente
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 

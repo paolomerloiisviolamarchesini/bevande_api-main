@@ -15,7 +15,7 @@ $db = new Database();
 $conn = $db->connect();
 $prodotto= new Prodotto($conn);
 
-if ($prodotto->removeProduct($data->$id) == true) 
+if ($prodotto->removeProduct($data->id) == true) 
 {
     echo json_encode(["message" => "Operation completed", "response" => true]);
 } else {

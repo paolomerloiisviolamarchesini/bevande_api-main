@@ -3,14 +3,14 @@ CREATE DATABASE bevande;
 USE bevande;
 
 CREATE TABLE prodotto(id int primary key auto_increment not null, nome nvarchar(25) not null,
-descrizione nvarchar(50), prezzo decimal(4,2) not null, id_categoria int not null, quantita int not null, active bool not null);
+descrizione nvarchar(50), prezzo decimal(4,2) not null, id_categoria int not null, quantita int not null, active boolean not null);
 
 CREATE TABLE categoria(id int primary key auto_increment not null,nome nvarchar(25) not null,
 descrizione nvarchar(50) not null);
 
 CREATE TABLE utente (id int primary key auto_increment not null,nome nvarchar(25) not null,
 cognome nvarchar(30) not null, email nvarchar(30) not null, password nvarchar(15) not null,
-telefono nvarchar(20) not null, data_nascita date not null, privilegi boolean not null, active boolean not null);
+telefono nvarchar(20) not null, data_nascita date not null, active boolean not null);
 
 CREATE TABLE ordine (id int primary key auto_increment not null, data_ora datetime not null,
 totale decimal (4,2) not null, id_cliente_esterno int NOT NULL, nome_cliente nvarchar(25) not null, cognome_cliente nvarchar(30) not null,

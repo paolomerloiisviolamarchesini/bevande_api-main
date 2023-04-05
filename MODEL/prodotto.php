@@ -7,17 +7,21 @@ class Prodotto
     {
         $this->conn = $db;
     }
-    public function addProduct($nome,$descrizione,$prezzo,$categoria,$quantita,$active)
+    public function addProduct($nome,$descrizione,$prezzo,$id_categoria,$quantita,$active)
     {
-        $sql = "INSERT INTO product (nome, descrizione, prezzo, categoria, quantita, active)
-        VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = sprintf("INSERT INTO product (nome, descrizione, prezzo, id_categoria, quantita, active)
+        VALUES (:nome,:descrizione,:prezzo,:id_categoria,:quantita,:active)");
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('ssdiii', $nome, $descrizione, $prezzo, $categoria,$quantita,$active);
-
-    if ($stmt->execute())
-    return $stmt;
-    else return "";
+        $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
+        $stmt->bindValue(':descrizione', $descrizione, PDO::PARAM_STR);
+        $stmt->bindValue(':prezzo', $prezzo, PDO::PARAM_STR);
+        $stmt->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
+        $stmt->bindValue(':quantita', $quantita, PDO::PARAM_INT);
+        $stmt->bindValue(':active', $active, PDO::PARAM_BOOL);
+       
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getArchiveProducts(){
@@ -25,7 +29,7 @@ class Prodotto
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getProduct($id){
@@ -36,10 +40,10 @@ class Prodotto
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function modifyProduct($id, $nome, $descrizione, $prezzo, $id_categoria)
+    public function modifyProduct($id, $nome, $descrizione, $prezzo, $id_categoria, $active)
     {
         $sql = sprintf("UPDATE prodotto
-                SET nome =:nome, descrizione=:descrizione, prezzo=:prezzo, id_categoria=:id_categoria
+                SET nome =:nome, descrizione=:descrizione, prezzo=:prezzo, id_categoria=:id_categoria, attivo=:attivo
                 WHERE id = :id");
 
         $stmt = $this->conn->prepare($sql);
@@ -48,6 +52,7 @@ class Prodotto
         $stmt->bindValue(':descrizione', $descrizione, PDO::PARAM_STR);
         $stmt->bindValue(':prezzo', $prezzo, PDO::PARAM_STR);
         $stmt->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
+        $stmt->bindValue(':active', $active, PDO::PARAM_BOOL);
 
         if ($stmt->execute())
         {
@@ -58,7 +63,6 @@ class Prodotto
             return "";
         }
     }
-
     public function removeProduct($id){
         $sql=sprintf("UPDATE prodotto SET active=0 WHERE id=:id");
         $stmt = $this->conn->prepare($sql);

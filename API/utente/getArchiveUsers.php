@@ -8,15 +8,20 @@ $conn = $db->connect();
 $utente = new Utente($conn);
 $result = $utente->getArchiveUsers();
 
-if ($result != false) {
-    $utenti = array();
-    while ($row = $result->fetch_assoc())
-    {
-        $utenti[] = $row;
-    }
-    echo json_encode($utenti, JSON_PRETTY_PRINT);
-} else {
-    http_response_code(400);
-    echo json_encode(["message" => "User not found"]);
+$users = array();
+for ($i = 0; $i < (count($result)); $i++) {
+    $user = array(
+        "id" =>  $result[$i]['id'],
+        "cognome" => $result[$i]["cognome"],
+        "nome" => $result[$i]["nome"],
+        "email" => $result[$i]["email"],
+        "password" => $result[$i]["password"],
+        "telefono" => $result[$i]["telefono"],
+        "active" => $result[$i] ["active"],
+        "data_nascita" => $result[$i] ["data_nascita"]
+    );
+    array_push($users, $user);
 }
+
+echo json_encode($users);
 ?>
