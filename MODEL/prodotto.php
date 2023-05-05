@@ -26,7 +26,8 @@ class Prodotto
     }
 
     public function getArchiveProducts(){
-        $sql=sprintf("SELECT * FROM prodotto WHERE 1=1");
+        $sql=sprintf("SELECT * FROM prodotto WHERE 1=1
+        INNER JOIN categoria ON prodotto.id_categoria=categoria.id");
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
