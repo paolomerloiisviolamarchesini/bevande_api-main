@@ -1,28 +1,33 @@
 <?php
-require __DIR__ . '/../../COMMON/connect.php';
+header("Access-Control-Allow-Origin: *");
 require __DIR__ . '/../../MODEL/ordine.php';
 header("Content-type: application/json; charset=UTF-8");
 
-$db = new Database();
-$conn = $db->connect();
-$ordine = new Ordine($conn);
+$ordine = new Ordine();
 $result = $ordine->getArchiveOrders();
+$ordini = array();
 
-$orders = array();
 for ($i = 0; $i < (count($result)); $i++) {
-    $order = array(
-        "id" =>  $result[$i]["id"],
+    $prodottiordine = $ordine->getOrderProducts($result[$i]["id"]);
+    $prodotti = array(
+    	"id" => $result[$i]["id"],
         "data_ora" => $result[$i]["data_ora"],
-        "nome_cliente" => $result[$i]["nome_cliente"],
-        "cognome_cliente" => $result[$i]["cognome_cliente"],
-        "totale" => $result[$i]["nome_cliente"],
-        "email_cliente" => $result[$i]["email_cliente"],
-        "telefono_cliente" => $result[$i]["telefono_cliente"],
-        "indirizzo_cliente" => $result[$i]["indirizzo_cliente"],
-        "ritiro" => $result[$i] ["ritiro"]
+        "totale" => $result[$i]["totale"],
+        "nome_user" => $result[$i]["nome_user"],        
+        "cognome" => $result[$i]["cognome"],
+        "email" => $result[$i]["email"],
+        "telefono" => $result[$i]["telefono"],
+        "ritiro" => $result[$i]["ritiro"],
+        "prodotti" => $prodottiordine
     );
-    array_push($orders, $order);
+    array_push($ordini, $prodotti);
 }
 
-echo json_encode($orders);
+if (empty($ordini)) {
+    http_response_code(404);
+    echo json_encode(["Message" => "La ricerca non ha prodotto risultati"]);
+} else {
+    http_response_code(200);
+    echo json_encode($ordini);
+}
 ?>
