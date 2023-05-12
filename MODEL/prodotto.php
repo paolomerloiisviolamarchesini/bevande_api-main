@@ -1,12 +1,24 @@
 <?php
+
+spl_autoload_register(function ($class) {
+    require __DIR__ . "/../COMMON/$class.php";
+});
+
+set_exception_handler("errorHandler::handleException");
+set_error_handler("errorHandler::handleError");
+
+
 class Prodotto
 {
-    protected $conn;
+    private Connect $db;
+    private PDO $conn;
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
+        $this->db = new Connect;
+        $this->conn = $this->db->connect();
     }
+    
     public function addProduct($nome,$descrizione,$prezzo,$id_categoria,$quantita,$active)
     {
         $sql = sprintf("INSERT INTO prodotto (nome, descrizione, prezzo, id_categoria, quantita, active)
@@ -26,11 +38,26 @@ class Prodotto
     }
 
     public function getArchiveProducts(){
-        $sql=sprintf("SELECT * FROM prodotto WHERE 1=1");
+        $sql=sprintf("SELECT p.nome, p.descrizione, p.prezzo, categoria.nome AS 'categoria_nome', quantita, p.Fats, p.Kcal, p.Proteins, p.Sugars, p.active 
+        FROM prodotto p
+        INNER JOIN categoria ON p.id_categoria = categoria.id
+        WHERE 1=1");
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+        public function getProductOrder($id){
+        $sql=sprintf("SELECT p.nome, p.id
+        FROM prodotto p
+        INNER JOIN prodotto_ordine po ON po.id_prodotto = p.id
+        INNER JOIN ordine o ON o.id = po.id_ordine
+        WHERE o.id=:id");
+        $stmt=$this->conn->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getProduct($id){
