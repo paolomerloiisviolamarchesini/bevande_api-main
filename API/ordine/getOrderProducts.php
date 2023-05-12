@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../COMMON/connect.php';
+header("Access-Control-Allow-Origin: *");
 require __DIR__ . '/../../MODEL/ordine.php';
 
 header("Content-type: application/json; charset=UTF-8");
@@ -10,10 +10,7 @@ if (!isset($_GET['id']) || empty($id = $_GET['id']))
     die();
 }
 
-$db = new Database();
-$conn = $db->connect();
 $ordine = new Ordine($conn);
-//qui result è un array
 $result = $ordine->getOrderProducts($id);
 
 $ordersProduct = array();
