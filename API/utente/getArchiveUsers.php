@@ -1,11 +1,9 @@
 <?php
-require __DIR__ . '/../../COMMON/connect.php';
+header("Access-Control-Allow-Origin: *");
 require __DIR__ . '/../../MODEL/utente.php';
 header("Content-type: application/json; charset=UTF-8");
 
-$db = new Database();
-$conn = $db->connect();
-$utente = new Utente($conn);
+$utente = new Utente();
 $result = $utente->getArchiveUsers();
 
 $users = array();
