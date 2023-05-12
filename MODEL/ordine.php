@@ -1,16 +1,27 @@
 <?php
+
+spl_autoload_register(function ($class) {
+    require __DIR__ . "/../COMMON/$class.php";
+});
+
+set_exception_handler("errorHandler::handleException");
+set_error_handler("errorHandler::handleError");
+
 class Ordine
 {
-    protected $conn;
+	private Connect $db;
+    private PDO $conn;
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
-
+        $this->db = new Connect;
+        $this->conn = $this->db->connect();
     }
 
     public function getOrder($id){
-        $sql=sprintf("SELECT * FROM ordine o where o.id=:id");
+        $sql=sprintf("SELECT * 
+        FROM ordine o 
+        where o.id=:id");
         $stmt=$this->conn->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -19,7 +30,10 @@ class Ordine
     }
 
     public function getArchiveOrders(){
-        $sql=sprintf("SELECT * FROM ordine WHERE 1=1");
+        $sql=sprintf("SELECT o.id, o.data_ora, o.totale, u.nome as 'nome_user', u.cognome, u.email, u.telefono, o.ritiro
+        FROM ordine o
+        INNER JOIN utente u ON u.id = o.id_cliente_esterno
+        WHERE 1=1");
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
 
