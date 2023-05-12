@@ -1,12 +1,23 @@
 <?php
+
+spl_autoload_register(function ($class) {
+    require __DIR__ . "/../COMMON/$class.php";
+});
+
+set_exception_handler("errorHandler::handleException");
+set_error_handler("errorHandler::handleError");
+
 class Utente
 {
-    protected $conn;
+	private Connect $db;
+    private PDO $conn;
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
+        $this->db = new Connect;
+        $this->conn = $this->db->connect();
     }
+    
     public function createUser($nome,$cognome,$email,$password,$telefono,$data_nascita,$active)
     {
         $sql = sprintf("INSERT INTO utente (nome, cognome, email, `password`, telefono, data_nascita, active)
