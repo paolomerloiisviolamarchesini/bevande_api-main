@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../COMMON/connect.php';
+header("Access-Control-Allow-Origin: *");
 require __DIR__ . '/../../MODEL/categoria.php';
 header("Content-type: application/json; charset=UTF-8");
 
@@ -10,9 +10,7 @@ if (!isset($_GET['id']) || empty($id = $_GET['id']))
     die();
 }
 
-$db = new Database();
-$conn = $db->connect();
-$categoria = new Categoria($conn);
+$categoria = new Categoria();
 //qui result è un array
 $result = $categoria->getCategory($id);
 //adesso result è un oggetto
