@@ -1,11 +1,13 @@
 <?php
 class Categoria
 {
-    protected $conn;
+	private Connect $db;
+    private PDO $conn;
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
+        $this->db = new Connect;
+        $this->conn = $this->db->connect();
     }
 
     public function getCategory($id){
